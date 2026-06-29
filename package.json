@@ -1,0 +1,35 @@
+{
+  "name": "university-api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "seed": "curl -X POST http://localhost:3000/api/seed",
+    "reset": "curl -X POST http://localhost:3000/api/reset",
+    "health": "curl http://localhost:3000/api/health",
+    "openapi": "curl http://localhost:3000/api/openapi.json"
+  },
+  "dependencies": {
+    "next": "16.2.9",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "swagger-ui": "^5.32.8",
+    "swagger-ui-react": "^5.32.8",
+    "uuid": "^14.0.1",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/swagger-ui-react": "^5.18.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.9",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
