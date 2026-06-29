@@ -21,6 +21,19 @@ import 'swagger-ui-react/swagger-ui.css';
 export default function SwaggerUI() {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#fafafa' }}>
+      <div style={{
+        backgroundColor: '#1e293b',
+        color: '#e2e8f0',
+        padding: '12px 20px',
+        fontFamily: 'monospace',
+        fontSize: '14px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+      }}>
+        <span style={{ color: '#94a3b8' }}>Base API:</span>
+        <span style={{ color: '#38bdf8' }}>{typeof window !== 'undefined' ? window.location.origin : ''}</span>
+      </div>
       <SwaggerUIReact
         url="/api/openapi.json"
         docExpansion="list"
