@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { courseService } from '@/services/course.service';
+import { validateApiKey } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
+  const authError = validateApiKey(request);
+  if (authError) return authError;
+
   const { searchParams } = new URL(request.url);
   const query = searchParams.get('q') || '';
   if (!query) {

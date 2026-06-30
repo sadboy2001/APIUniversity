@@ -7,7 +7,7 @@ export const openApiSpec = {
   },
   tags: [
     { name: 'Students', description: 'Manage university students' },
-    { name: 'Courses', description: 'Manage university courses' },
+    { name: 'Courses', description: 'Manage university courses. Requires API Key authentication.' },
     { name: 'Teachers', description: 'Manage university teachers' },
   ],
   paths: {
@@ -52,30 +52,94 @@ export const openApiSpec = {
         tags: ['Courses'],
         summary: 'Get all courses',
         operationId: 'getCourses',
+        security: [{ apiKeyAuth: [] }],
         parameters: [
           { name: 'page', in: 'query', schema: { type: 'integer', default: 1 } },
           { name: 'limit', in: 'query', schema: { type: 'integer', default: 10 } },
           { name: 'sortBy', in: 'query', schema: { type: 'string', enum: ['code', 'title', 'credits', 'semester'] } },
           { name: 'sortOrder', in: 'query', schema: { type: 'string', enum: ['asc', 'desc'] } },
         ],
-        responses: { '200': { description: 'Successful response', content: { 'application/json': { schema: { $ref: '#/components/schemas/PaginatedCourses' } } } } },
+        responses: {
+          '200': { description: 'Successful response', content: { 'application/json': { schema: { $ref: '#/components/schemas/PaginatedCourses' } } } },
+          '401': { description: 'Unauthorized - invalid or missing API Key', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+        },
       },
       post: {
         tags: ['Courses'],
         summary: 'Create a course',
         operationId: 'createCourse',
+        security: [{ apiKeyAuth: [] }],
         requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/CourseInput' } } } },
-        responses: { '201': { description: 'Created', content: { 'application/json': { schema: { $ref: '#/components/schemas/CourseResponse' } } } } },
+        responses: {
+          '201': { description: 'Created', content: { 'application/json': { schema: { $ref: '#/components/schemas/CourseResponse' } } } },
+          '401': { description: 'Unauthorized - invalid or missing API Key', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+        },
       },
     },
     '/api/courses/{id}': {
-      get: { tags: ['Courses'], summary: 'Get course by ID', operationId: 'getCourseById', parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }], responses: { '200': { description: 'Found', content: { 'application/json': { schema: { $ref: '#/components/schemas/CourseResponse' } } } }, '404': { description: 'Not found' } } },
-      put: { tags: ['Courses'], summary: 'Update course', operationId: 'updateCourse', parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }], requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/CourseInput' } } } }, responses: { '200': { description: 'Updated' }, '404': { description: 'Not found' } } },
-      patch: { tags: ['Courses'], summary: 'Patch course', operationId: 'patchCourse', parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }], requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/CourseInput' } } } }, responses: { '200': { description: 'Updated' }, '404': { description: 'Not found' } } },
-      delete: { tags: ['Courses'], summary: 'Delete course', operationId: 'deleteCourse', parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }], responses: { '204': { description: 'Deleted' }, '404': { description: 'Not found' } } },
+      get: {
+        tags: ['Courses'],
+        summary: 'Get course by ID',
+        operationId: 'getCourseById',
+        security: [{ apiKeyAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: {
+          '200': { description: 'Found', content: { 'application/json': { schema: { $ref: '#/components/schemas/CourseResponse' } } } },
+          '401': { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          '404': { description: 'Not found' },
+        },
+      },
+      put: {
+        tags: ['Courses'],
+        summary: 'Update course',
+        operationId: 'updateCourse',
+        security: [{ apiKeyAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/CourseInput' } } } },
+        responses: {
+          '200': { description: 'Updated', content: { 'application/json': { schema: { $ref: '#/components/schemas/CourseResponse' } } } },
+          '401': { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          '404': { description: 'Not found' },
+        },
+      },
+      patch: {
+        tags: ['Courses'],
+        summary: 'Patch course',
+        operationId: 'patchCourse',
+        security: [{ apiKeyAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/CourseInput' } } } },
+        responses: {
+          '200': { description: 'Updated', content: { 'application/json': { schema: { $ref: '#/components/schemas/CourseResponse' } } } },
+          '401': { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          '404': { description: 'Not found' },
+        },
+      },
+      delete: {
+        tags: ['Courses'],
+        summary: 'Delete course',
+        operationId: 'deleteCourse',
+        security: [{ apiKeyAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: {
+          '204': { description: 'Deleted' },
+          '401': { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          '404': { description: 'Not found' },
+        },
+      },
     },
     '/api/courses/search': {
-      get: { tags: ['Courses'], summary: 'Search courses', operationId: 'searchCourses', parameters: [{ name: 'q', in: 'query', required: true, schema: { type: 'string' } }], responses: { '200': { description: 'Results', content: { 'application/json': { schema: { type: 'object', properties: { success: { type: 'boolean' }, data: { type: 'array', items: { $ref: '#/components/schemas/Course' } }, total: { type: 'integer' } } } } } } } },
+      get: {
+        tags: ['Courses'],
+        summary: 'Search courses',
+        operationId: 'searchCourses',
+        security: [{ apiKeyAuth: [] }],
+        parameters: [{ name: 'q', in: 'query', required: true, schema: { type: 'string' } }],
+        responses: {
+          '200': { description: 'Results', content: { 'application/json': { schema: { type: 'object', properties: { success: { type: 'boolean' }, data: { type: 'array', items: { $ref: '#/components/schemas/Course' } }, total: { type: 'integer' } } } } } },
+          '401': { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+        },
+      },
     },
     '/api/teachers': {
       get: { tags: ['Teachers'], summary: 'Get all teachers', operationId: 'getTeachers', parameters: [{ name: 'page', in: 'query', schema: { type: 'integer', default: 1 } }, { name: 'limit', in: 'query', schema: { type: 'integer', default: 10 } }, { name: 'sortBy', in: 'query', schema: { type: 'string', enum: ['firstName', 'lastName', 'department', 'title'] } }, { name: 'sortOrder', in: 'query', schema: { type: 'string', enum: ['asc', 'desc'] } }], responses: { '200': { description: 'Successful response', content: { 'application/json': { schema: { $ref: '#/components/schemas/PaginatedTeachers' } } } } } },
@@ -90,8 +154,12 @@ export const openApiSpec = {
   },
   components: {
     securitySchemes: {
-      bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
-      apiKeyAuth: { type: 'apiKey', in: 'header', name: 'X-API-Key' },
+      apiKeyAuth: {
+        type: 'apiKey',
+        in: 'header',
+        name: 'X-API-Key',
+        description: 'API Key required for Courses endpoints. Value: university-api-key-2025',
+      },
     },
     schemas: {
       Student: {
@@ -192,8 +260,4 @@ export const openApiSpec = {
       Error: { type: 'object', properties: { success: { type: 'boolean' }, error: { type: 'object', properties: { code: { type: 'string' }, message: { type: 'string' } } } } },
     },
   },
-  security: [
-    { bearerAuth: [] },
-    { apiKeyAuth: [] },
-  ],
 };

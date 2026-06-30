@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { courseService } from '@/services/course.service';
 import { courseSchema } from '@/lib/validation';
+import { validateApiKey } from '@/lib/auth';
 import { z } from 'zod';
 
-export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const authError = validateApiKey(request);
+  if (authError) return authError;
+
   const { id } = await params;
   const course = courseService.getById(id);
   if (!course) {
@@ -13,6 +17,9 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 }
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const authError = validateApiKey(request);
+  if (authError) return authError;
+
   const { id } = await params;
   try {
     const body = await request.json();
@@ -31,6 +38,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const authError = validateApiKey(request);
+  if (authError) return authError;
+
   const { id } = await params;
   try {
     const body = await request.json();
@@ -48,7 +58,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   }
 }
 
-export async function DELETE(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const authError = validateApiKey(request);
+  if (authError) return authError;
+
   const { id } = await params;
   const deleted = courseService.delete(id);
   if (!deleted) {
